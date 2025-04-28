@@ -26,6 +26,11 @@ app.use(express.json());
 //View engine.
 app.set('view engine', 'ejs');
 
+//Redirect because I am a dumb stupid idiot who only designed 20% of the website.
+app.get('/', (req, res) => {
+    res.redirect('/courses');
+});
+
 //Call crsRoutes to handle routings.
 app.use('/courses', crsRoutes);
 
