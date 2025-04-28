@@ -15,14 +15,14 @@
   "description": "",
   "dependencies": {
     "@prisma/client": "^6.6.0",
-    "prisma": "^6.6.0",
     "bootstrap": "^5.3.5",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "prisma": "^6.6.0"
   },
   "repository": {
     "type": "git",
