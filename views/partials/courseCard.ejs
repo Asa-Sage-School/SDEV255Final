@@ -1,0 +1,13 @@
+<div class="course-card">
+  <div class="card-contents">
+    <h3><a href="/courses/<%= course.cid %>"><%= course.name %></a></h3>
+    <p>
+      <%= course.cid.substring(0, 4) %> &ndash;
+      <%= course.cred %> credits
+    </p>
+    <a href="/courses/<%= course.cid %>/edit">Edit</a>
+    <a class="delete" data-cid="<%= course.cid %>">
+      <img src="/trashcan.svg" alt="delete icon">
+    </a>
+  </div>
+</div>

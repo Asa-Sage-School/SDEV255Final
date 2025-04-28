@@ -1,0 +1,27 @@
+<html lang="en"> <%/*Tweaked copy of create.ejs that auto-populates with old data and uses the PUT method instead.*/%>
+    <%- include('./partials/head.ejs') %><%/*Probably going to try and combine this with the create.ejs and course.ejs pages once I get really involved with Bootstrap and React stuff.*/%>
+
+<body>
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="content course-form">
+        <form action="/courses/<%= course.cid %>?_method=PUT" method="POST"><%/*Damn you HTML!*/%>
+            
+            <label for="cid">Course ID</label>
+            <input type="text" id="cid" name="cid" value="<%= course.cid %>" readonly>
+            
+            <label for="name">Course Name</label>
+            <input type="text" id="name" name="name" value="<%= course.name %>" required>
+            
+            <label for="desc">Description</label>
+            <textarea id="desc" name="desc" required><%= course.desc %></textarea>
+
+            <label for="cred">Credit Hours</label>
+            <input type="number" id="cred" name="cred" min="0" step="1" value="<%= course.cred %>" required>
+
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+    
+</body>
+</html>

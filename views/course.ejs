@@ -1,0 +1,29 @@
+<html lang="en">
+<%- include("./partials/head.ejs") %>
+
+<body>
+  <%- include("./partials/nav.ejs") %>
+
+  <div class="course content">
+    <h2><%= course.name %></h2>
+
+    <ul>
+      <li><strong>Name:</strong> <%= course.name %></li>
+      <li><strong>Description:</strong> <%= course.desc %></li>
+      <li><strong>Credit Hours:</strong> <%= course.cred %></li>
+    </ul>
+
+    <div>
+      <a href="/courses/<%= course.cid %>/edit" class="btn edit-btn">Edit</a>
+
+      <form action="/courses/<%= course.cid %>?_method=DELETE" method="POST" class="inline-form"><!--Scriptless deletion instead of the insane Node.js tutorial script that did not need to be there.-->
+        <button type="submit" class="btn delete-btn">
+          <img src="/trashcan.svg" alt="Delete course">
+        </button>
+      </form>
+    </div>
+  </div>
+  </div>
+
+</body>
+</html>

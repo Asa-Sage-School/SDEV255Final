@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+//Normally I take pride in coming up with inane and labyrinthine rules to follow when it comes to naming format and stuff, but I do not have the time or energy, so I'm giving in to the camelCase maniacs.
+
+generator client {
+  provider = "prisma-client-js" 
+  output   = "@prisma/client" //Apparently leaving this as-is will cause problems down the line so I won't do that, but I am giving it what seems to be the default pathing in the docs.
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+//This Enum lets me track multiple types of users in the same table.
+enum userType {
+  TEACHER
+  STUDENT
+  ADMIN
+}
+
+//And this one lets me track multiple relationships in the same table.
+enum relType {
+  STUDENT
+  TEACHER
+  CREATOR
+}
+
+//Some simple user and course tables.
+model users {
+  uid String @id @default(uuid()) //Industry standard UUID. I had planned a whole custom base-64 user ID system I thought might have more entropy and be memorable at the same time, but I was completely off the mark.
+  name String
+  pword String //Will be a 512-bit salted maximum security Argon2id hash.
+  type userType
+  creAt DateTime @default(now()) //Security created-at timestamp.
+  ucRel ucRel[]
+}
+
+model courses {
+  cid String @id //Instead of using a UUID, I'll be using a natural key system here with an all-caps four-character domain followed by a dash and three numbers, for example SDEV-255.
+  name String           //This lets me encode domain information in the CID and completely remove a field while making the table easier to search.
+  desc String?
+  cred Int
+  creAt DateTime @default(now()) //Security created-at timestamp.
+  ucRel ucRel[]
+}
+
+//A relational table for connecting users to courses.
+model ucRel {
+  relid String @id //Need to put this in so Prisma doesn't freak, I can probably generate it by just cutting up the uid and cid.
+  uid String
+  cid String
+  rel relType
+
+  //The actual relationships part of the table.
+  user users @relation(fields: [uid], references: [uid])
+  course courses @relation(fields: [cid], references: [cid])
+}

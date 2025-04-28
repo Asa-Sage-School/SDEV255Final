@@ -1,0 +1,162 @@
+/*Tried to clean this up a bit.*/
+
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&family=Roboto:wght@500&display=swap');
+
+body {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 20px;
+  font-family: "Iceberg", sans-serif;
+}
+
+h1, h2, h3, p, a, ul {
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+h2 {
+  margin-bottom: 20px;
+}
+
+/*Nav & footer styles. */
+nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 60px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  text-transform: uppercase;
+}
+nav ul {
+  display: flex;
+  list-style: none;
+}
+nav li + li {
+  margin-left: 20px;
+}
+nav h1 {
+  font-size: 3em;
+}
+nav a, nav p {
+  color: #777;
+  font-weight: 300;
+  text-decoration: none;
+}
+footer {
+  color: #777;
+  text-align: center;
+  margin: 80px auto 20px;
+}
+
+/* Index styles. */
+.course-item a {
+  display: block;
+  margin: 20px 0;
+  padding-left: 30px;
+  border-left: 6px solid orange;
+}
+.course-item a:hover h3 {
+  color: orange;
+}
+
+/* Course styles. (like the page, specifically) */
+.courses{
+    position: relative;
+}
+.courses{
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    padding: 8px;
+}
+.delete:hover{
+    cursor: pointer;
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
+}
+
+/* -- Course Cards -- */
+.course-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin: 20px 0;
+  border-radius: 6px;
+}
+
+.course-card h3 a {
+  color: #222;
+  text-decoration: none;
+}
+
+.course-card small {
+  color: #555;
+  display: block;
+  margin-top: 10px;
+}
+
+.card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.delete-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-btn {
+  color: orange;
+}
+
+.delete-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Create/edit styles. */
+.course-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+}
+.course-form label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+.course-form input,
+.course-form textarea {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.course-form textarea {
+  height: 120px;
+  resize: vertical;
+}
+.course-form button {
+  margin-top: 20px;
+  background: orange;
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1em;
+  cursor: pointer;
+}
+.course-form button:hover {
+  background: #774400;
+}
