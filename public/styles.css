@@ -61,6 +61,12 @@ footer {
     border-radius: 50%;
     padding: 8px;
 }
+.course-list{
+  padding: 5px 0px;
+}
+.course-list li{
+  padding: 2.5px;
+}
 
 /* -- Course Cards -- */
 .course-card {
@@ -108,15 +114,19 @@ footer {
   background: transparent;
   border: none;
   cursor: pointer;
+  padding: 2.5px;
 }
 
 .edit-btn {
   color: #FFF;
+  font-size: large;
+  text-decoration: none;
 }
 
 .delete-btn img {
   width: 20px;
   height: 20px;
+  filter: brightness(0) saturate(100%) invert(98%) sepia(6%) saturate(2%) hue-rotate(17deg) brightness(104%) contrast(100%); /*Yaaay. Why is this so hard to do? Shout out to https://angel-rs.github.io/css-color-filter-generator/ for making this not suck.*/
 }
 .course-card:hover{
   cursor: pointer;
