@@ -5,8 +5,8 @@
 
 generator client {
   provider = "prisma-client-js" 
-  output   = "@prisma/client" //Apparently leaving this as-is will cause problems down the line so I won't do that, but I am giving it what seems to be the default pathing in the docs.
-}
+  output   = "../prismaCLI/client" //Apparently leaving this as-is will cause problems down the line so I won't do that, but I am giving it what seems to be the default pathing in the docs.
+} //HA HA HA GUESS WHAT? Prisma hides their *real* expected filepath in the node_modules path! Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare.
 
 datasource db {
   provider = "sqlite"

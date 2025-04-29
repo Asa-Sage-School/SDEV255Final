@@ -1,7 +1,7 @@
 //Controller for my starter CRUD routes regarding courses. Will update and expand later.
 
 //Gotta put this here or everything breaks. I think.
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../prismaCLI/client');
 const prisma = new PrismaClient();
 
 //Have to set these up as async I think, might just be best practices. That or the Prisma docs are on something. Either way I'm using await for prisma commands.
