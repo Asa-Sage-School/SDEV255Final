@@ -1,8 +1,7 @@
 //Controller for my starter CRUD routes regarding courses. Will update and expand later.
 
-//Gotta put this here or everything breaks. I think.
-const { PrismaClient } = require('../prismaCLI/client');
-const prisma = new PrismaClient();
+//Gotta put this here or everything breaks.
+const prisma = require('./prsmCtrl');
 
 //Have to set these up as async I think, might just be best practices. That or the Prisma docs are on something. Either way I'm using await for prisma commands.
 //And that means taking lots of inspiration from the Prisma docs and reworking all of the Node.js tutorial CRUD to be asnyc.
@@ -13,7 +12,7 @@ async function allCourses(req, res) {
         const courses = await prisma.courses.findMany();
         res.render('index', { title: 'Courses', courses });
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
@@ -24,7 +23,7 @@ async function getCourse(req, res) {
         const course = await prisma.courses.findUnique({ where: { cid } });
         res.render('course', { title: 'Course', course });
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
@@ -33,7 +32,7 @@ async function newCoursePage(req, res) {
     try {
         res.render('create', { title: 'Create Course' });
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
@@ -48,7 +47,7 @@ async function editCoursePage(req, res) {
             res.render('edit', { title: 'Edit Course', course });
         }
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
@@ -59,9 +58,9 @@ async function createCourse(req, res) {
         const { cid, name, desc, cred } = req.body;
         const credInt = parseInt(cred); //Horrid little variable that will live a short and painful life.
         const course = await prisma.courses.create({ data: {cid, name, desc, cred: credInt} });
-        res.redirect('/')
+        res.redirect('/');
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
@@ -74,11 +73,21 @@ async function updateCourse(req, res) {
         const credInt = parseInt(cred); //Horrid little variable that will live a short and painful lif
         await prisma.courses.update({ 
             where: { cid },
-            data: {cid, name, desc: desc || null, cred: credInt}
+            data: {
+                cid, 
+                name, 
+                desc: desc || null, 
+                cred: credInt,
+                ucRel: {    //Nested creation statement to generate the creator relationship.
+                    relid: uuidv4(),
+                    uid: req.session.userUid,
+                    rel: 'CREATOR'
+                }
+            }
         }); //Might update this later too.
         res.redirect('/courses')
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
@@ -89,7 +98,7 @@ async function deleteCourse(req, res) {
         await prisma.courses.delete({ where: { cid } });
         res.redirect('/')
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
@@ -102,3 +111,4 @@ module.exports = {
     updateCourse,
     deleteCourse
 };
+

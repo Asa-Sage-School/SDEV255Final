@@ -1,9 +1,15 @@
 <nav>
-    <div class="site-title">
-        <a href="/courses"><h1>Final Project</h1></a>
-    </div>
-    <ul>
-        <li><a href="/courses">Courses</a></li>
-        <li><a href="/courses/create">New Course</a></li>
-    </ul>
+  <div class="site-title">
+    <a href="/courses"><h1>Final Project</h1></a>
+  </div>
+  <ul>
+    <% if (user.uid) { %>
+    <li><a href="/user/account"><%= user.name %></a></li>
+    <% } else { %>
+    <li><a href="/user/login">Login</a></li>
+    <li><a href="/user/register">Register</a></li>
+    <% } %> <% if ((user.type == 'TEACHER') || (user.type == 'ADMIN')) { %>
+    <li><a href="/courses/create">New Course</a></li>
+    <% } %>
+  </ul>
 </nav>

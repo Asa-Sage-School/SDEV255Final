@@ -13,15 +13,17 @@
       <li><strong>Credit Hours:</strong> <%= course.cred %></li>
     </ul>
 
-    <div>
-      <a href="/courses/<%= course.cid %>/edit" class="btn edit-btn">Edit</a>
+    <% if ((user.type == 'TEACHER') || (user.type == 'ADMIN')) { %>
+      <div>
+        <a href="/courses/<%= course.cid %>/edit" class="btn edit-btn">Edit</a>
 
-      <form action="/courses/<%= course.cid %>?_method=DELETE" method="POST" class="inline-form"><!--Scriptless deletion instead of the insane Node.js tutorial script that did not need to be there.-->
-        <button type="submit" class="btn delete-btn">
-          <img src="/trashcan.svg" alt="Delete course">
-        </button>
-      </form>
-    </div>
+        <form action="/courses/<%= course.cid %>?_method=DELETE" method="POST" class="inline-form"><!--Scriptless deletion instead of the insane Node.js tutorial script that did not need to be there.-->
+          <button type="submit" class="btn delete-btn">
+            <img src="/trashcan.svg" alt="Delete course">
+          </button>
+        </form>
+      </div>
+    <% } %>
   </div>
   </div>
 

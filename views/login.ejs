@@ -1,0 +1,19 @@
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+
+  <body>
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="content form">
+      <form action="/user/login" method="POST">
+        <label for="name">Username</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="pass">Password</label>
+        <input type="password" id="pass" name="pass" required />
+
+        <button type="submit">Log in</button>
+      </form>
+    </div>
+  </body>
+</html>

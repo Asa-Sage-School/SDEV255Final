@@ -4,19 +4,20 @@ const express = require('express');
 const crsCtrl = require('../controllers/crsCtrl');
 const router = express.Router();
 const methodOverride = require('method-override');
+const routeAuth = require('../middleware/routeAuth');
 
 router.use(methodOverride('_method')); //I'm tempted to try and put this somewhere else so it goes off with all the server's other middleware but I'm scared I'll break something.
 
+//Re-organized around level of permissions required.
 router.get('/', crsCtrl.allCourses);
 
-router.post('/', crsCtrl.createCourse);
-router.get('/create', crsCtrl.newCoursePage);
-
-router.get('/:cid/edit', crsCtrl.editCoursePage);
-router.put('/:cid', crsCtrl.updateCourse);
+router.get('/create', routeAuth.isTeacher, crsCtrl.newCoursePage);
+router.post('/', routeAuth.isTeacher, crsCtrl.createCourse);
 
 router.get('/:cid', crsCtrl.getCourse);
 
-router.delete('/:cid', crsCtrl.deleteCourse);
+router.get('/:cid/edit', routeAuth.isTeacher, crsCtrl.editCoursePage);
+router.put('/:cid', routeAuth.isTeacher, crsCtrl.updateCourse);
+router.delete('/:cid', routeAuth.isTeacher, crsCtrl.deleteCourse);
 
 module.exports = router;

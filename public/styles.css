@@ -133,8 +133,8 @@ footer {
   box-shadow: 1px 2px 3px #00915e;
 }
 
-/* Create/edit styles. */
-.course-form {
+/* Forms in general. */
+.form {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
@@ -143,13 +143,13 @@ footer {
   background: #333;
   color: #FFF;
 }
-.course-form label {
+.form label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
 }
-.course-form input,
-.course-form textarea {
+.form input,
+.form textarea {
   width: 100%;
   margin-top: 5px;
   padding: 8px;
@@ -159,11 +159,11 @@ footer {
   background-color: #222;
   color: #FFF;
 }
-.course-form textarea {
+.form textarea {
   height: 120px;
   resize: vertical;
 }
-.course-form button {
+.form button {
   margin-top: 20px;
   background: #00915e;
   color: #fff;
@@ -173,6 +173,6 @@ footer {
   font-size: 1em;
   cursor: pointer;
 }
-.course-form button:hover {
+.form button:hover {
   background: #004030;
 }

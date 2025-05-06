@@ -1,0 +1,26 @@
+<html lang="en">
+  <%- include('./partials/head.ejs') %>
+
+  <body>
+    <%- include('./partials/nav.ejs') %>
+
+    <div class="content form">
+      <form action="/user/register" method="POST">
+        <label for="name">Username</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="pass">Password</label>
+        <input type="password" id="pass" name="pass" required />
+
+        <label for="type">Account Type</label>
+        <select id="type" name="type">
+          <option value="STUDENT">Student</option>
+          <option value="TEACHER">Teacher</option>
+          <!--If you think I'm ever making admin an account type available to users you're absolutely wrong. Even I have standards.-->
+        </select>
+
+        <button type="submit">Create Account</button>
+      </form>
+    </div>
+  </body>
+</html>
