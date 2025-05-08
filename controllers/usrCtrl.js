@@ -2,7 +2,7 @@
 //Putting basically all authentication code here so it's in one focused location.
 const argon2 = require('argon2');
 const { v4: uuidv4 } = require('uuid');
-const prisma = require('./prsmCtrl');
+const prisma = require('./prismaImport');
 
 async function passMan(uid, password) {
     //Here I must admit I'm getting a bit excessive.
@@ -61,7 +61,7 @@ async function login(req, res) {
     try {
         const { name, pass } = req.body;
         const user = await prisma.users.findFirst({ where: { name } }); //EXTREMELY BAD CODE. This is basically useless for larger numbers of users unless name is always unique. This is purely to get logging in *working*, not *good*.
-        const correctPass = argon2.verify(user.pword, pass);            //I absolutely *want* to make a better login manager but that would take time I don't have and updating the user table with more security features.            
+        const correctPass = await argon2.verify(user.pword, pass);            //I absolutely *want* to make a better login manager but that would take time I don't have and updating the user table with more security features.            
         if (correctPass) {                                              //Fun fact I spent several hours making stupid mistakes. Argon2id has it's own verifications function, and my attempt at creating one was more of a pseudorandom number generator. 
             req.session.userUid = user.uid;
             req.session.userType = user.type;

@@ -1,7 +1,8 @@
 //Controller for my starter CRUD routes regarding courses. Will update and expand later.
 
 //Gotta put this here or everything breaks.
-const prisma = require('./prsmCtrl');
+const prisma = require('./prismaImport');
+const { v4: uuidv4 } = require('uuid');
 
 //Have to set these up as async I think, might just be best practices. That or the Prisma docs are on something. Either way I'm using await for prisma commands.
 //And that means taking lots of inspiration from the Prisma docs and reworking all of the Node.js tutorial CRUD to be asnyc.
@@ -57,7 +58,19 @@ async function createCourse(req, res) {
         //I have been forced to juggle these values manually like a common fool.
         const { cid, name, desc, cred } = req.body;
         const credInt = parseInt(cred); //Horrid little variable that will live a short and painful life.
-        const course = await prisma.courses.create({ data: {cid, name, desc, cred: credInt} });
+        const course = await prisma.courses.create({ data: {
+            cid,
+            name,
+            desc,
+            cred: credInt,
+            ucRel: {    //Nested creation statement to generate the creator relationship.
+                create: {
+                    relid: uuidv4(),
+                    uid: req.session.userUid,
+                    rel: 'CREATOR'
+                }
+            }
+        } });
         res.redirect('/');
     } catch (err) {
         console.log(err);
@@ -77,12 +90,7 @@ async function updateCourse(req, res) {
                 cid, 
                 name, 
                 desc: desc || null, 
-                cred: credInt,
-                ucRel: {    //Nested creation statement to generate the creator relationship.
-                    relid: uuidv4(),
-                    uid: req.session.userUid,
-                    rel: 'CREATOR'
-                }
+                cred: credInt
             }
         }); //Might update this later too.
         res.redirect('/courses')

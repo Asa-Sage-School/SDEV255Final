@@ -24,10 +24,14 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
-    secret: 'SDEV255_PLACEHOLDER',
+    secret: process.env.SECRET, //Slightly fixed! It's now in the .env, because I forgot I had one of those. That might be a bit better, but I've heard the vaguest whispers that I should actually be using some kind of digital vault and do not want to mess with all of that.
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 500 } //Setting an arbitrarily high session length so users don't have to log in multiple times. If this was an actual production app I'd set a reasonable lockout instead but this isn't going to be storing sensitive information.
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 500, //Setting an arbitrarily high session length so users don't have to log in multiple times. If this was an actual production app I'd set a reasonable lockout instead but this isn't going to be storing sensitive information.
+        httpOnly: true, //Basic security settings I neglected.
+        sameSite: 'lax'
+    } 
 }))
 
 app.use((req, res, next) => { //Passthrough middleware to automatically load the user in every .ejs file.
