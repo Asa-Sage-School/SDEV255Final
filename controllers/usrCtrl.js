@@ -88,5 +88,6 @@ module.exports = {
     register,
     newUser,
     signIn,
-    login
+    login,
+    account
 };

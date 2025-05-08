@@ -2,7 +2,7 @@
   <div class="card-contents">
     <h3><a href="/courses/<%= course.cid %>"><%= course.name %></a></h3>
     <p><%= course.cid.substring(0, 4) %> &ndash; <%= course.cred %> credits</p>
-    <% if ((user.type == 'TEACHER') || (user.type == 'ADMIN')) { %>
+    <% if (isCreator) { %>
     <a class="edit-btn" href="/courses/<%= course.cid %>/edit">Edit</a>
     <% } %>
   </div>

@@ -7,8 +7,8 @@ async function isTeacher(req, res, next) {
     try {
         const uid = req.session.userUid;
         const user = await prisma.users.findUnique({ where: { uid } });
-        const typematch = (req.session.userType == user.type);
-        if (((user.type == 'TEACHER') || (user.type == 'ADMIN')) && typematch) { //prevent type spoofing (hopefully).
+        const typeMatch = (req.session.userType == user.type);
+        if (((user.type == 'TEACHER') || (user.type == 'ADMIN')) && typeMatch) { //prevent type spoofing (hopefully).
             return next();
         } else {
             return res.status(404).render('404', { title: '404' });
@@ -18,6 +18,7 @@ async function isTeacher(req, res, next) {
     }
 }
 
+//Edit permissions middleware. Ensures teachers can only edit or delete courses they create. Trying to edit someone else's just makes a 404 appear.
 async function editPerm(req, res, next) {
     try {
         const uid = req.session.userUid;
@@ -60,8 +61,24 @@ async function loginRedir(req, res, next) {
     }
 }
 
+async function isStudent(res, req, next) {
+    try {
+        const uid = req.session.userUid;
+        const user = await prisma.users.findUnique({ where: { uid } });
+        const typeMatch = (req.session.userType == user.type);
+        if (((user.type == 'STUDENT') || (user.type == 'ADMIN')) && typeMatch) {
+            return next();
+        } else {
+            res.redirect('/user/login');
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
     isTeacher,
     loginRedir,
-    editPerm
+    editPerm,
+    isStudent
 }

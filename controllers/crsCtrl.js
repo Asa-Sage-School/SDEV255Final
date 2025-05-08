@@ -10,8 +10,32 @@ const { v4: uuidv4 } = require('uuid');
 //Async - Get all courses.
 async function allCourses(req, res) {
     try {
+        const uid = req.session.userUid;
         const courses = await prisma.courses.findMany();
-        res.render('index', { title: 'Courses', courses });
+        let user = {};
+        if (uid) {
+            user = await prisma.users.findUnique({ where: { uid } });
+        }
+        let creatorList = [];
+        for(const course of courses) {
+            const rels = await prisma.ucRel.findMany({ where: { uid, cid: course.cid } })
+            let isCreator = false;
+            if (uid) {
+                for(const rel of rels) {
+                    if (rel.rel === 'CREATOR') {
+                        isCreator = true;
+                    }
+                }
+                if (user.type === 'ADMIN') {
+                    isCreator = true;
+                }
+            }
+            creatorList.push({
+                course: course.cid,
+                isCreator
+            });
+        }
+        res.render('index', { title: 'Courses', courses, creatorList });
     } catch (err) {
         console.log(err);
     }
@@ -20,9 +44,21 @@ async function allCourses(req, res) {
 //Async - Get specific course by cid param.
 async function getCourse(req, res) {
     try {
-        const cid = req.params.cid;
+        const uid = req.session.userUid;
+        const cid = req.params.cid;;
+        const user = await prisma.users.findUnique({ where: { uid } });
         const course = await prisma.courses.findUnique({ where: { cid } });
-        res.render('course', { title: 'Course', course });
+        const rels = await prisma.ucRel.findMany({ where: { uid, cid } })
+        let isCreator = false;
+        if (user.type === 'ADMIN') {
+            isCreator = true;
+        }
+        for(const rel of rels) {
+            if (rel.rel === 'CREATOR') {
+                isCreator = true;
+            }
+        }
+        res.render('course', { title: 'Course', course, isCreator });
     } catch (err) {
         console.log(err);
     }

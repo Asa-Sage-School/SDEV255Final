@@ -7,6 +7,7 @@ generator client {
   provider = "prisma-client-js"
   output   = "../prismaCLI/client" //Apparently leaving this as-is will cause problems down the line so I won't do that, but I am giving it what seems to be the default pathing in the docs.
 }
+
 //HA HA HA GUESS WHAT? Prisma hides their *real* expected filepath in the node_modules path! Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare.
 
 datasource db {
@@ -55,6 +56,6 @@ model ucRel {
   rel   relType
 
   //The actual relationships part of the table.
-  user   users   @relation(fields: [uid], references: [uid])
-  course courses @relation(fields: [cid], references: [cid])
+  user   users   @relation(fields: [uid], references: [uid], onDelete: Cascade) //Updated to cascade delete once a user or course is removed because that's an option I missed at first glance.
+  course courses @relation(fields: [cid], references: [cid], onDelete: Cascade)
 }

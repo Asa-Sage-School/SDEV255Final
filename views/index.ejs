@@ -1,36 +1,18 @@
 <html lang="en">
-    <%- include('./partials/head.ejs') %>
+  <%- include('./partials/head.ejs') %>
 
-<body>
+  <body>
     <%- include('./partials/nav.ejs') %>
 
     <div class="content course-item">
-        <h2>Courses</h2>
+      <h2>Courses</h2>
 
-        <% if (courses.length > 0) { %>
-          <% courses.forEach(course => { %>
-            <%- include('partials/courseCard', { course }) %>
-          <% }) %>
-        <% } else { %>
-          <p>Course list missing or corrupted</p>
-        <% } %>
+      <% if (courses.length > 0) { %> <% courses.forEach(course => { %> <% const
+      rel = creatorList.find(item => item.course === course.cid) %> <% const
+      isCreator = rel.isCreator %> <%- include('partials/courseCard', { course,
+      isCreator }) %> <% }) %> <% } else { %>
+      <p>Course list missing or corrupted</p>
+      <% } %>
     </div>
-
-    <script>
-      //Had to move this from the course Cards to avoid everything falling apart.
-      document.querySelectorAll('a.delete').forEach(link => {
-        link.addEventListener('click', e => {
-          e.preventDefault();
-          const cid = link.dataset.cid;
-          fetch(`/courses/${cid}`, { method: 'DELETE' })
-            .then(res => {
-              if (res.ok) window.location.reload();
-              else console.error('Delete failed');
-            })
-            .catch(console.error);
-        });
-      });
-    </script>
-
-</body>
+  </body>
 </html>

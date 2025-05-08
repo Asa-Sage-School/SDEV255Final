@@ -13,7 +13,7 @@
       <li><strong>Credit Hours:</strong> <%= course.cred %></li>
     </ul>
 
-    <% if ((user.type == 'TEACHER') || (user.type == 'ADMIN')) { %>
+    <% if (isCreator) { %>
       <div>
         <a href="/courses/<%= course.cid %>/edit" class="btn edit-btn">Edit</a>
 
