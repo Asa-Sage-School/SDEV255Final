@@ -5,6 +5,23 @@
     <%- include('./partials/nav.ejs') %>
 
     <div class="content course-item">
+      <div class="search-form">
+        <form action="/courses" method="GET">
+          <ul>
+            <li>
+              <label>ID/Name Search:</label>
+              <input type="text" name="q" value="<%= search.q %>" />
+            </li>
+            <li>
+              <button type="submit">Search</button>
+              <% if ((search != '') && (search)) { %>
+              <a href="/courses" class="button">Clear Search</a>
+              <% } %>
+            </li>
+          </ul>
+        </form>
+      </div>
+
       <h2>Courses</h2>
 
       <% if (courses.length > 0) { %> <% courses.forEach(course => { %> <% const

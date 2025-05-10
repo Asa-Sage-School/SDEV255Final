@@ -11,7 +11,16 @@ const { v4: uuidv4 } = require('uuid');
 async function allCourses(req, res) {
     try {
         const uid = req.session.userUid;
-        const courses = await prisma.courses.findMany();
+        const search = req.query.q?.trim() || '';
+        const courses = await prisma.courses.findMany({
+            where: {
+                OR: [
+                    { name: { contains: search } },
+                    { cid: { contains: search } }
+                ]
+            }
+        });
+
         let user = {};
         if (uid) {
             user = await prisma.users.findUnique({ where: { uid } });
@@ -44,7 +53,7 @@ async function allCourses(req, res) {
                 isCreator
             });
         }
-        res.render('index', { title: 'Courses', courses, creatorList, isStudent });
+        res.render('index', { title: 'Courses', courses, creatorList, isStudent, search });
     } catch (err) {
         console.log(err);
     }
