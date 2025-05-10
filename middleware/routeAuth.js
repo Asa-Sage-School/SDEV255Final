@@ -61,13 +61,15 @@ async function loginRedir(req, res, next) {
     }
 }
 
-async function isStudent(res, req, next) {
+async function isStudent(req, res, next) {
     try {
         const uid = req.session.userUid;
-        const user = await prisma.users.findUnique({ where: { uid } });
-        const typeMatch = (req.session.userType == user.type);
-        if (((user.type == 'STUDENT') || (user.type == 'ADMIN')) && typeMatch) {
-            return next();
+        if (uid) {
+            const user = await prisma.users.findUnique({ where: { uid } });
+            const typeMatch = (req.session.userType == user.type);
+            if (((user.type == 'STUDENT') || (user.type == 'ADMIN')) && typeMatch) {
+                return next();
+            }
         } else {
             res.redirect('/user/login');
         }

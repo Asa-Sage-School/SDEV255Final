@@ -17,17 +17,26 @@ async function allCourses(req, res) {
             user = await prisma.users.findUnique({ where: { uid } });
         }
         let creatorList = [];
+        const isStudent = ((uid) && (user.type === 'STUDENT'));
         for(const course of courses) {
             const rels = await prisma.ucRel.findMany({ where: { uid, cid: course.cid } })
             let isCreator = false;
             if (uid) {
-                for(const rel of rels) {
-                    if (rel.rel === 'CREATOR') {
+                if (isStudent) {
+                    for(const rel of rels) { //I separated this out because this is the same list being used for behavior it isn't supposed to be. It saves some room but is a bit confusing.
+                        if (rel.rel === 'STUDENT') {
+                            isCreator = true; //Basically when the user is a student, creatorList will actually be used as a list of classes the student is enrolled in.
+                        }   //That way I don't need to bloat and overcomplicate this function further with more data being passed through to the .ejs, and can use fewer variables.
+                    }
+                } else {
+                    for(const rel of rels) {
+                        if (rel.rel === 'CREATOR') {
+                            isCreator = true;
+                        }
+                    }
+                    if (user.type === 'ADMIN') {
                         isCreator = true;
                     }
-                }
-                if (user.type === 'ADMIN') {
-                    isCreator = true;
                 }
             }
             creatorList.push({
@@ -35,7 +44,7 @@ async function allCourses(req, res) {
                 isCreator
             });
         }
-        res.render('index', { title: 'Courses', courses, creatorList });
+        res.render('index', { title: 'Courses', courses, creatorList, isStudent });
     } catch (err) {
         console.log(err);
     }
@@ -45,8 +54,11 @@ async function allCourses(req, res) {
 async function getCourse(req, res) {
     try {
         const uid = req.session.userUid;
-        const cid = req.params.cid;;
-        const user = await prisma.users.findUnique({ where: { uid } });
+        const cid = req.params.cid;
+        let user = {}
+        if (uid) {
+            user = await prisma.users.findUnique({ where: { uid } });
+        }
         const course = await prisma.courses.findUnique({ where: { cid } });
         const rels = await prisma.ucRel.findMany({ where: { uid, cid } })
         let isCreator = false;
@@ -146,6 +158,49 @@ async function deleteCourse(req, res) {
     }
 }
 
+async function enrollUser(req, res) {
+    try {
+        const uid = req.session.userUid;
+        const cid = req.params.cid;
+        if (uid) {
+            await prisma.ucRel.create({
+                data: {
+                    relid: uuidv4(),
+                    uid,
+                    cid,
+                    rel: 'STUDENT'
+                }
+            });
+            res.redirect('/user/dashboard')
+        } else {
+            res.redirect('/user/login')
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function dropUser(req, res) {
+    try {
+        const uid = req.session.userUid;
+        const cid = req.params.cid;
+        if (uid) {
+            await prisma.ucRel.deleteMany({
+                where: {
+                    uid,
+                    cid,
+                    rel: 'STUDENT'
+                }
+            });
+            res.redirect('/user/dashboard')
+        } else {
+            res.redirect('/user/login')
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
     allCourses,
     getCourse,
@@ -153,6 +208,8 @@ module.exports = {
     editCoursePage,
     createCourse,
     updateCourse,
-    deleteCourse
+    deleteCourse,
+    enrollUser,
+    dropUser
 };
 

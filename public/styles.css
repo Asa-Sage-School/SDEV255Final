@@ -7,9 +7,8 @@ body {
   margin: 20px auto;
   padding: 0 5px;
   font-family: "Iceberg", sans-serif;
-  background-color: black;
+  background-color: #111;
 }
-
 h1, h2, h3, p, a, ul {
   margin: 0;
   padding: 0;
@@ -74,8 +73,10 @@ footer {
   padding: 0px;
   margin: 20px 0;
 }
-
-.course-card div {
+.course-card a {
+  text-decoration: none;
+}
+.card-contents {
   display: block;
   margin: 10px 0;
   padding: 10px 0;
@@ -85,11 +86,9 @@ footer {
   border-radius: 6px;
   background: #333;
 }
-
 .course-card h3 {
   margin-bottom: 5px;
 }
-
 .course-card h3 a {
   color: #FFF;
   text-decoration: none;
@@ -143,6 +142,9 @@ footer {
   background: #333;
   color: #FFF;
 }
+.form form {
+  margin-block-end: 0em;
+}
 .form label {
   display: block;
   margin-top: 15px;
@@ -172,7 +174,28 @@ footer {
   border-radius: 4px;
   font-size: 1em;
   cursor: pointer;
+  font-family: "Iceberg", sans-serif;
 }
 .form button:hover {
+  background: #004030;
+}
+
+/* special hidden forms in the course cards. */
+.card-form form {
+  margin-block-end: 0em;
+}
+.card-form button {
+  margin-top: 5px;
+  margin-bottom: 0px;
+  background: #00915e;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  font-family: "Iceberg", sans-serif;
+}
+.card-form button:hover {
   background: #004030;
 }

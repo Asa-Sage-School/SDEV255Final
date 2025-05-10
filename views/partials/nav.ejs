@@ -10,6 +10,8 @@
     <li><a href="/user/register">Register</a></li>
     <% } %> <% if ((user.type == 'TEACHER') || (user.type == 'ADMIN')) { %>
     <li><a href="/courses/create">New Course</a></li>
+    <% } %> <% if ((user.uid) && (user.type == 'STUDENT')) { %>
+    <li><a href="/user/dashboard">Your Courses</a></li>
     <% } %>
   </ul>
 </nav>

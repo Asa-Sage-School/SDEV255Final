@@ -5,12 +5,11 @@
     <%- include('./partials/nav.ejs') %>
 
     <div class="content course-item">
-      <h2>Courses</h2>
+      <h3>Your Enrolled Courses:</h3>
 
-      <% if (courses.length > 0) { %> <% courses.forEach(course => { %> <% const
-      rel = creatorList.find(item => item.course === course.cid) %> <% const
-      isCreator = rel.isCreator %> <%- include('partials/courseCard', { course,
-      isCreator, isStudent }) %> <% }) %> <% } else { %>
+      <% if (courses.length > 0) { %> <% courses.forEach(course => { %> <%-
+      include('partials/courseCard', { course, isCreator: true, isStudent: true
+      }) %> <% }) %> <% } else { %>
       <p>
         Course list missing or corrupted. If this issue persists, please
         sacrifice a new goat and wait 7-10 business days.

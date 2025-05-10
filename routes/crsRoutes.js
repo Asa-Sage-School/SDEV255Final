@@ -17,6 +17,10 @@ router.post('/', routeAuth.isTeacher, crsCtrl.createCourse);
 router.get('/:cid', crsCtrl.getCourse);
 
 router.get('/:cid/edit', routeAuth.isTeacher, routeAuth.editPerm, crsCtrl.editCoursePage);
+
+router.post('/:cid/enroll', routeAuth.isStudent, crsCtrl.enrollUser);
+router.post('/:cid/drop', routeAuth.isStudent, crsCtrl.dropUser);
+
 router.put('/:cid', routeAuth.isTeacher, routeAuth.editPerm, crsCtrl.updateCourse);
 router.delete('/:cid', routeAuth.isTeacher, routeAuth.editPerm, crsCtrl.deleteCourse);
 

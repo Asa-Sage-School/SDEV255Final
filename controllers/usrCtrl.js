@@ -84,10 +84,30 @@ async function account(req, res) {
     }
 }
 
+async function dash(req, res) {
+    try {
+        const uid = req.session.userUid;
+        const courses = await prisma.courses.findMany({ //Just figured out I could do this. I need to use this expanded object structure more.
+            where: {
+                ucRel: {
+                    some: {
+                        uid,
+                        rel: 'STUDENT'
+                    }
+                }
+            }
+        });
+        res.render('stuDash', { title: 'Student Dashboard', courses })
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
     register,
     newUser,
     signIn,
     login,
-    account
+    account,
+    dash
 };

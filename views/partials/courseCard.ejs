@@ -1,9 +1,25 @@
 <div class="course-card">
-  <div class="card-contents">
-    <h3><a href="/courses/<%= course.cid %>"><%= course.name %></a></h3>
-    <p><%= course.cid.substring(0, 4) %> &ndash; <%= course.cred %> credits</p>
-    <% if (isCreator) { %>
-    <a class="edit-btn" href="/courses/<%= course.cid %>/edit">Edit</a>
-    <% } %>
-  </div>
+  <a href="/courses/<%= course.cid %>">
+    <div class="card-contents">
+      <h3><%= course.name %></h3>
+      <p>
+        <%= course.cid.substring(0, 4) %> &ndash; <%= course.cred %> credits
+      </p>
+      <div class="card-form">
+        <% if (isCreator && !isStudent) { %>
+        <form action="/courses/<%= course.cid %>/edit" method="GET">
+          <button type="submit">Edit</button>
+        </form>
+        <% } else if (!isCreator && isStudent) { %>
+        <form action="/courses/<%= course.cid %>/enroll" method="POST">
+          <button type="submit">Enroll</button>
+        </form>
+        <% } else if (isCreator && isStudent) { %>
+        <form action="/courses/<%= course.cid %>/drop" method="POST">
+          <button type="submit">Drop</button>
+        </form>
+        <% } %>
+      </div>
+    </div>
+  </a>
 </div>
