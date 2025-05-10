@@ -2,7 +2,7 @@
 //I'll be putting custom middleware functions here for limiting editing, creation, and deletion access.
 const prisma = require('../controllers/prismaImport');
 
-//Basic validation for blocking students and signed-out users from accessing sensitive pages. Returns a 404 instead.
+//Basic validation for blocking students and signed-out users from accessing sensitive pages.
 async function isTeacher(req, res, next) {
     try {
         const uid = req.session.userUid;
@@ -11,19 +11,21 @@ async function isTeacher(req, res, next) {
         if (((user.type == 'TEACHER') || (user.type == 'ADMIN')) && typeMatch) { //prevent type spoofing (hopefully).
             return next();
         } else {
-            return res.status(404).render('404', { title: '404' });
+            req.session.error = "You're not supposed to be there!";
+            return res.redirect('/courses');
         }
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
-//Edit permissions middleware. Ensures teachers can only edit or delete courses they create. Trying to edit someone else's just makes a 404 appear.
+//Edit permissions middleware. Ensures teachers can only edit or delete courses they create. Trying to edit someone else's makes funny messages appear as an easter egg.
 async function editPerm(req, res, next) {
     try {
         const uid = req.session.userUid;
         if (!uid) { //Block non-logged-in users alltogether.
-            return res.status(404).render('404', { title: '404' });
+            req.session.error = "You're not supposed to be there!";
+            return res.redirect('/user/login');
         }
         const cid = req.params.cid;
         const user = await prisma.users.findUnique({ where: { uid } })
@@ -33,7 +35,8 @@ async function editPerm(req, res, next) {
         } 
         const rels = await prisma.ucRel.findMany({ where: { uid, cid } })
         if (rels.length === 0) {    //Just getting this possibility out of the way super quick.
-            return res.status(404).render('404', { title: '404' });
+            req.session.error = 'How???';
+            return res.redirect('back');
         }
         let isCreator = false;        
         for(const rel of rels) {
@@ -45,10 +48,11 @@ async function editPerm(req, res, next) {
         if (isCreator) {
             return next();
         } else {
-            return res.status(404).render('404', { title: '404' });
+            req.session.error = 'NO! Bad user!';
+            return res.redirect('back');
         }
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -61,6 +65,7 @@ async function loginRedir(req, res, next) {
     }
 }
 
+//Validation for student-exclusive pages.
 async function isStudent(req, res, next) {
     try {
         const uid = req.session.userUid;
@@ -74,7 +79,7 @@ async function isStudent(req, res, next) {
             res.redirect('/user/login');
         }
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 

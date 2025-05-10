@@ -20,12 +20,10 @@ async function allCourses(req, res) {
                 ]
             }
         });
-
-        let user = {};
         if (uid) {
             user = await prisma.users.findUnique({ where: { uid } });
         }
-        let creatorList = [];
+        let creatorList = []; //DUAL PURPOSE: When isStudent is false, this is used for its original purpose: Tracking which classes a teacher has created. If isStudent is true, it instead tracks which courses the student is enrolled in.
         const isStudent = ((uid) && (user.type === 'STUDENT'));
         for(const course of courses) {
             const rels = await prisma.ucRel.findMany({ where: { uid, cid: course.cid } })
@@ -55,7 +53,7 @@ async function allCourses(req, res) {
         }
         res.render('index', { title: 'Courses', courses, creatorList, isStudent, search });
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -65,6 +63,11 @@ async function getCourse(req, res) {
         const uid = req.session.userUid;
         const cid = req.params.cid;
         let user = {}
+
+        if (!cid) {
+            res.status(404).render('404', { title: '404' });
+        }
+
         if (uid) {
             user = await prisma.users.findUnique({ where: { uid } });
         }
@@ -81,7 +84,7 @@ async function getCourse(req, res) {
         }
         res.render('course', { title: 'Course', course, isCreator });
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -90,7 +93,7 @@ async function newCoursePage(req, res) {
     try {
         res.render('create', { title: 'Create Course' });
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -105,7 +108,7 @@ async function editCoursePage(req, res) {
             res.render('edit', { title: 'Edit Course', course });
         }
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -114,7 +117,7 @@ async function createCourse(req, res) {
     try {
         //I have been forced to juggle these values manually like a common fool.
         const { cid, name, desc, cred } = req.body;
-        const credInt = parseInt(cred); //Horrid little variable that will live a short and painful life.
+        let credInt = parseInt(cred); //Horrid little variable that will live a short and painful life. Converts the user credit entry into an integer so I can put it somewhere else.
         const course = await prisma.courses.create({ data: {
             cid,
             name,
@@ -130,7 +133,7 @@ async function createCourse(req, res) {
         } });
         res.redirect('/');
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -152,7 +155,7 @@ async function updateCourse(req, res) {
         }); //Might update this later too.
         res.redirect('/courses')
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -163,7 +166,7 @@ async function deleteCourse(req, res) {
         await prisma.courses.delete({ where: { cid } });
         res.redirect('/')
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -185,7 +188,7 @@ async function enrollUser(req, res) {
             res.redirect('/user/login')
         }
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 
@@ -206,7 +209,7 @@ async function dropUser(req, res) {
             res.redirect('/user/login')
         }
     } catch (err) {
-        console.log(err);
+        next(err);
     }
 }
 

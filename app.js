@@ -2,7 +2,7 @@
 //and using that to jump right into getting the whole thing up and running. I have about 20 hours to turn this in, so I'm going to move fast and break things when I'd prefer not to.
 
 //Instead of the MongoDB and Mongoose framework I've been taught, I elected to learn Prisma entirely on my own because when I see a security issue, I overcompensate.
-//I am in pain, but this silly little class project will be secure into the 2050s or I will die trying.
+//I am in pain, but this silly little class project will be secure into the 2050s or I will die trying. [Update: It isn't secure, still alive though.]
 //At the time of writing there are like 7 security holes in Mongoose, and I am not typing all of that boilerplate over and over.
 //I'm also going to be using Express, EJS, and Node.js like the Node.js tutorial, since that's something I understand now and is immediately convenient. (so I can re-use some of that stuff to get things going more quickly.)
 //But I'll also be trying to work in Bootstrap and maybe a bit of other stuff. 
@@ -43,13 +43,19 @@ app.use((req, res, next) => { //Passthrough middleware to automatically load the
     next();
 });
 
+app.use((req, res, next) => {
+    res.locals.alert = req.session.error;
+    delete req.session.error;
+    next();
+});
+
 app.use(morgan('dev'));
 app.use(express.json());
 
 //View engine.
 app.set('view engine', 'ejs');
 
-//Redirect because I am a dumb stupid idiot who only designed 20% of the website.
+//Redirect because I improperly structured the site and ended up with an index page that doesn't render at the standard location.
 app.get('/', (req, res) => {
     res.redirect('/courses');
 });
@@ -58,6 +64,16 @@ app.use('/user', usrRoutes);
 
 //Call crsRoutes to handle routings.
 app.use('/courses', crsRoutes);
+
+//Real error handling! I'm so tired. To clarify, I looked up how to do this, and I'm not certain I'm doing it 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    if (req.accepts('html')) {
+        req.session.error = err.message || 'Unexpected error.';
+        return res.redirect('back');
+    }
+    res.status(500).json({ error: err.message });
+})
 
 //404 handling.
 app.use((req, res) => {

@@ -1,4 +1,4 @@
-//Almost identical to the Node.js tutorial version but what do you want from me? This file is comically simple.
+//Boilerplate router for course system.
 
 const express = require('express');
 const crsCtrl = require('../controllers/crsCtrl');
@@ -6,9 +6,9 @@ const router = express.Router();
 const methodOverride = require('method-override');
 const routeAuth = require('../middleware/routeAuth');
 
-router.use(methodOverride('_method')); //I'm tempted to try and put this somewhere else so it goes off with all the server's other middleware but I'm scared I'll break something.
+router.use(methodOverride('_method')); //This just has to go here. I think...
 
-//Re-organized around level of permissions required.
+//Re-organized around level of permissions required. Vaguely. Also partitioned by general purpose and routing constraints, that way nothing breaks and it's easy to find related functions. (usually)
 router.get('/', crsCtrl.allCourses);
 
 router.get('/create', routeAuth.isTeacher, crsCtrl.newCoursePage);

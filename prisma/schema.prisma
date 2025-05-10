@@ -7,6 +7,7 @@ generator client {
   provider = "prisma-client-js"
   output   = "../prismaCLI/client" //Apparently leaving this as-is will cause problems down the line so I won't do that, but I am giving it what seems to be the default pathing in the docs.
 }
+
 //HA HA HA GUESS WHAT? Prisma hides their *real* expected filepath in the node_modules path! Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare Nightmare.
 
 datasource db {
@@ -48,6 +49,7 @@ model courses {
 }
 
 //A relational table for connecting users to courses.
+//This, similarly to the users table, sacrifices atomicity for sheer convenience: The rel enumerator value stores a type of relation, uid and cid store the user and course that connect the two, and relid acts as a unique identifier to prevent collisions.
 model ucRel {
   relid String  @id //Need to put this in so Prisma doesn't freak, I can probably generate it by just cutting up the uid and cid.
   uid   String

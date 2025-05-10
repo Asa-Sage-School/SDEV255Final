@@ -1,0 +1,8 @@
+<% if (typeof alert !== 'undefined' && alert) { %>
+<script>
+  window.onload = () => {
+    alert("<%= alert %>");
+    window.history.replaceState({}, document.title, window.location.pathname);
+  };
+</script>
+<% } %>
