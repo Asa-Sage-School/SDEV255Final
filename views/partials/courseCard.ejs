@@ -5,7 +5,7 @@
       <p>
         <%= course.cid.substring(0, 4) %> &ndash; <%= course.cred %> credits
       </p>
-      <div class="card-form">
+      <div class="form card-form">
         <% if (isCreator && !isStudent) { %>
         <form action="/courses/<%= course.cid %>/edit" method="GET">
           <button type="submit">Edit</button>

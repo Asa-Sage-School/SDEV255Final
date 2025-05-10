@@ -1,47 +1,59 @@
-/*Tried to clean this up a bit.*/
-
-/*This is now a mess again, but there's little I can do about it right now.*/
+/*Attempting a cleaning pass to implement a bit of Bootstrap on the last day.*/
 
 @import url('https://fonts.googleapis.com/css2?family=Iceberg&family=Roboto:wght@500&display=swap');
+
+/*Establishing base colors.*/
+:root {
+  --prime: #00915e; /*Primary non-greyscale color*/
+  --sec: #004030; /*Secondary non-greyscale color*/
+  --bkg: #111;  /*Background color*/
+  --elm-lt: #333; /*Light element color*/
+  --elm-dk: #222; /*Dark element color*/
+  --brd-gs: #444; /*Greyscale border color*/
+  --txt-lt: #FFF; /*Light text color*/
+  --txt-dk: #999; /*Dark/muted text color*/
+}
 
 body {
   width: 90%;
   margin: 20px auto;
   padding: 0 5px;
   font-family: "Iceberg", sans-serif;
-  background-color: #111;
+  background-color: var(--bkg);
+  color: var(--txt-lt);
+  animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to {opacity: 1;}
 }
 h1, h2, h3, p, a, ul {
   margin: 0;
   padding: 0;
-  color: #FFF;
-}
-h2 {
-  margin-bottom: 20px;
+  color: inherit;
 }
 
-/*Nav & footer styles. */
+/*Navigation styles. */
 nav {
   display: flex;
   justify-content: space-between;
   margin-bottom: 60px;
   padding-bottom: 10px;
-  border-bottom: 5px solid #00915e;
+  border-bottom: 5px solid var(--prime);
   text-transform: uppercase;
 }
 nav ul {
   display: flex;
   list-style: none;
   align-self: center;
-}
-nav li + li {
-  margin-left: 20px;
+  gap: 20px;
 }
 nav h1 {
   font-size: 3em;
+  color: var(--txt-lt);
 }
 nav a, nav p {
-  color: #999;
+  color: var(--txt-dk);
   font-weight: 300;
   text-decoration: none;
 }
@@ -63,39 +75,6 @@ nav a, nav p {
 .course-list li{
   padding: 2.5px;
 }
-
-/* -- Course Cards -- */
-.course-card {
-  position: relative;
-  justify-self: left;
-  width: 90%;
-  padding: 0px;
-  margin: 20px 0;
-}
-.course-card a {
-  text-decoration: none;
-}
-.card-contents {
-  display: grid;
-  margin: 10px 0;
-  padding: 10px 0;
-  padding-left: 10px;
-  border: 2px solid #004030;
-  border-left: 10px solid #00915e;
-  border-radius: 6px;
-  background: #333;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-}
-.course-card h3 {
-  grid-column: 1;
-  margin: 5px;
-  text-align: left;
-}
-.course-card p {
-  grid-column: 2;
-  text-align: center;
-}
 .edit-btn,
 .delete-btn {
   background: transparent;
@@ -105,7 +84,7 @@ nav a, nav p {
   padding: 2.5px;
 }
 .edit-btn {
-  color: #FFF;
+  color: var(--txt-lt);
   font-size: large;
   text-decoration: none;
   margin: 5px;
@@ -116,20 +95,57 @@ nav a, nav p {
   margin: 5px;
   filter: brightness(0) saturate(100%) invert(98%) sepia(6%) saturate(2%) hue-rotate(17deg) brightness(104%) contrast(100%); /*Yaaay. Why is this so hard to do? Shout out to https://angel-rs.github.io/css-color-filter-generator/ for making this not suck.*/
 }
+
+h2 { /*Spacing to clean up individual course pages.*/
+  margin-bottom: 20px;
+}
+
+/* -- Course Cards -- */
+.course-card {
+  width: 90%;
+  margin: 20px 0;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.3s ease;
+}
+.course-card a {
+  text-decoration: none;
+}
+.card-contents {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin: 10px 0;
+  padding: 0px;
+  padding-left: 10px;
+  border: 2px solid var(--sec);
+  border-left: 10px solid var(--prime);
+  border-radius: 6px;
+  background: var(--elm-lt);
+}
 .course-card:hover{
-  cursor: pointer;
-  box-shadow: 1px 2px 3px #00915e;
+  transform: translate(10px, -3px);
+  box-shadow: 1px 2px 3px var(--prime);
+}
+.course-card h3 {
+  grid-column: 1;
+  margin: 5px;
+  text-align: left;
+}
+.course-card p {
+  grid-column: 2;
+  text-align: center;
 }
 
 /* Forms in general. */
-.form {
+.form, .search-form {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 20px auto;
   padding: 20px;
-  border: 2px solid #004030;
+  border: 2px solid var(--sec);
   border-radius: 8px;
-  background: #333;
-  color: #FFF;
+  background: var(--elm-lt);
+  color: var(--txt-lt);
 }
 .form form {
   margin-block-end: 0em;
@@ -143,136 +159,122 @@ nav a, nav p {
 .form textarea {
   width: 100%;
   margin-top: 5px;
-  padding: 8px;
-  border: 2px solid #444;
+  padding: 5px;
+  border: 2px solid var(--brd-gs);
   border-radius: 4px;
   font-family: inherit;
-  background-color: #222;
-  color: #FFF;
+  background-color: var(--elm-dk);
+  color: inherit;
+  font-family: inherit;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.2s ease;
 }
 .form textarea {
   height: 120px;
   resize: vertical;
 }
-.form button {
-  margin-top: 20px;
-  background: #00915e;
-  color: #fff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 4px;
+.form select {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 2px solid var(--brd-gs);
+  border-radius: 6px;
+  font-family: inherit;
+  appearance: none;
+  background-color: var(--elm-dk);
+  color: inherit;
   font-size: 1em;
   cursor: pointer;
-  font-family: "Iceberg", sans-serif;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.2s ease;
 }
-.form button:hover {
-  background: #004030;
+.form input:hover,
+.form textarea:hover, .form select:hover {
+  border-color: var(--prime);
 }
-
-/* special hidden forms in the course cards. */
+.form option {
+  padding: 5px;
+}
+.form input:focus,
+.form textarea:focus, .form select:focus {
+  box-shadow: 1px 2px 3px var(--prime);
+  outline: none;
+  border-color: var(--prime);
+}
+/* Generalized button management: */
+button, .button {
+  background: var(--prime);
+  color: var(--txt-lt);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  padding: 5px 8px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1em;
+  transition:
+    background 0.3s ease,
+    transform 0.05s ease,
+    box-shadow 0.2s ease;
+}
+button:active, .button:active {
+  transform: scale(0.98);
+}
+button:hover, .button:hover {
+  background: var(--sec);
+  box-shadow: 1px 2px 3px var(--prime);
+  cursor: pointer;
+}
+/* Course card tweaks: */
+.card-form {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
 .card-form form {
   grid-column: 3;
   justify-self: end;
   padding-right: 10px;
-  margin-bottom: 0px;
-  align-self: center;
 }
 .card-form button {
-  margin: 2.5px 0px;
-  background: #00915e;
-  color: #fff;
   padding: 5px 10px;
-  border: none;
   border-radius: 6px;
-  font-size: 1em;
-  cursor: pointer;
-  font-family: "Iceberg", sans-serif;
 }
-.card-form button:hover {
-  background: #004030;
-}
-
-/* special not-hidden form for course searching. */
-
+/* Search form tweaks: */
 .search-form {
-  position: relative;
-  justify-self: left;
-  width: 90%;
+  max-width: 90%;
   padding: 0px;
   padding-left: 10px;
-  margin: 20px 0;
-  max-height: 150px;
-  min-height: 50px;
-  border: 2px solid #004030;
-  border-radius: 8px;
-  background: #333;
-  color: #FFF;
-  align-content: center;
-  border: 2px solid #004030;
-  border-left: 10px solid #00915e;
-  border-radius: 6px;
+  margin-right: 10%;
+  border-left: 10px solid var(--prime);
 }
 .search-form ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 25px;
+  gap: 15px;
   align-items: center;
+  justify-items: center;
   list-style: none;
   padding: 0;
   margin: 0 5px;
 }
 .search-form ul li {
-  flex: 1 1 15%;
   display: flex;
   align-items: center;
-  text-align: center;
-}
-.search-form form {
-  margin-block-end: 0em;
-  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
 }
 .search-form label {
-  font-weight: bold;
   white-space: nowrap;
-  padding-right: 5px;
+  margin: 0;
+  flex: 1;
 }
 .search-form input {
-  width: 100%;
-  padding: 5px;
   min-width: 200px;
-  border: 2px solid #444;
-  border-radius: 4px;
-  font-family: inherit;
-  background-color: #222;
-  color: #FFF;
-}
-.search-form button {
-  margin: 10px;
-  background: #00915e;
-  color: #fff;
-  padding: 5px 8px;
-  border: none;
-  border-radius: 4px;
-  font-size: 1em;
-  cursor: pointer;
-  font-family: "Iceberg", sans-serif;
-}
-.search-form button:hover {
-  background: #004030;
-}
-
-.button {
-  margin: 10px;
-  background: #00915e;
-  color: #fff;
-  padding: 5px 8px;
-  border: none;
-  border-radius: 4px;
-  font-size: 1em;
-  cursor: pointer;
-  font-family: "Iceberg", sans-serif;
-  text-decoration: none;
-}
-.button:hover {
-  background: #004030;
+  margin: 0;
 }
