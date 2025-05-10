@@ -4,11 +4,10 @@ const argon2 = require('argon2');
 const { v4: uuidv4 } = require('uuid');
 const prisma = require('./prismaImport');
 
-async function passMan(uid, password) {
-    //Here I must admit I'm getting a bit excessive.
-    //Converting uuidv4 to hexadecimal to make it parseable by a separate function,
-    //then buffering it as 16 bytes instead of a string so I can run it as an argon2id salt.
-    //There's no need for any of this. Or the extremely high settings I put on argon2id. I just did it because it seemed funny to make the test passwords for this project extremely secure.
+//This is the main part of the file that isn't self-explanatory: Originally I had no idea Argon2id handled salts automatically, because I was speed-reading the documentation and not paying attention.
+//As a result, I implemented passMan, a function who's entire purpose is to use the user's uuidv4 as the argon2id salt instead. This caused significant unexpected behavior until I figured out my error.
+//Unfortunately now I'm at a point where reworking this would be more difficult than leaving it as-is. Lesson learned for the future, I guess.
+async function passMan(uid, password, next) {
     try {
         const saltHex = uid.replace(/-/g, '');
         const salt = Buffer.from(saltHex, 'hex');
@@ -26,7 +25,7 @@ async function passMan(uid, password) {
 
 }
 
-async function register(req, res) {
+async function register(req, res, next) {
     try {
         res.render('register', { title: 'New User' });
     } catch (err) {
@@ -34,9 +33,14 @@ async function register(req, res) {
     }
 }
 
-async function newUser(req, res) {
+async function newUser(req, res, next) {
     try {
         const { name, pass, type } = req.body;
+        const userExists = await prisma.users.findFirst({ where: { name } });
+        if (userExists) {
+            req.session.error = 'Username taken, please try something else.';
+            return res.redirect('/users/register');
+        }
         //Generating a uuidv4 (industry standard collision resistant user id format)
         const uid = uuidv4();
         const hashed = await passMan(uid, pass);
@@ -49,7 +53,7 @@ async function newUser(req, res) {
     }
 }
 
-async function signIn(req, res) {
+async function signIn(req, res, next) {
     try {
         res.render('login', { title: 'Login' });
     } catch (err) {
@@ -57,7 +61,7 @@ async function signIn(req, res) {
     }
 }
 
-async function login(req, res) {
+async function login(req, res, next) {
     try {
         const { name, pass } = req.body;
         const user = await prisma.users.findFirst({ where: { name } }); //EXTREMELY BAD CODE. This is basically useless for larger numbers of users unless name is always unique. This is purely to get logging in *working*, not *good*.
@@ -83,7 +87,7 @@ async function login(req, res) {
     }
 }
 
-async function account(req, res) {
+async function account(req, res, next) {
     try {
         res.render('account', { title: 'Account' });
     } catch (err) {
@@ -91,7 +95,7 @@ async function account(req, res) {
     }
 }
 
-async function dash(req, res) {
+async function dash(req, res, next) {
     try {
         const uid = req.session.userUid;
         const courses = await prisma.courses.findMany({ //Just figured out I could do this. I need to use this expanded object structure more.
@@ -110,11 +114,26 @@ async function dash(req, res) {
     }
 }
 
+async function logOut(req, res, next) {
+    try {
+        req.session.destroy(err => {
+            if (err) {
+                return res.redirect('/courses');
+            }
+            res.clearCookie('connect.sid'); //Theoretically this is where express-session puts the cookies, and this function just nukes them, throws an error if there isn't a session running, and sends the user back to index.
+            res.redirect('/courses'); //Not that I get all of that, but it makes sense, I guess.
+        })
+    } catch (err) {
+        next(err);
+    }
+}
+
 module.exports = {
     register,
     newUser,
     signIn,
     login,
     account,
-    dash
+    dash,
+    logOut
 };

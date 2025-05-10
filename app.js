@@ -1,13 +1,7 @@
-//Due to various personal issues, I've had less time to work on stage 1 than I would prefer. To account for this, I'm making some snap judgments I can adjust later on,
-//and using that to jump right into getting the whole thing up and running. I have about 20 hours to turn this in, so I'm going to move fast and break things when I'd prefer not to.
 
-//Instead of the MongoDB and Mongoose framework I've been taught, I elected to learn Prisma entirely on my own because when I see a security issue, I overcompensate.
-//I am in pain, but this silly little class project will be secure into the 2050s or I will die trying. [Update: It isn't secure, still alive though.]
-//At the time of writing there are like 7 security holes in Mongoose, and I am not typing all of that boilerplate over and over.
-//I'm also going to be using Express, EJS, and Node.js like the Node.js tutorial, since that's something I understand now and is immediately convenient. (so I can re-use some of that stuff to get things going more quickly.)
-//But I'll also be trying to work in Bootstrap and maybe a bit of other stuff. 
+//There used to be a very long and winding comment here, but most of it was useless and I want to make my comments at least a little bit professional.
 
-require('dotenv').config(); //Required to make Prisma work, but yipee for security and convenience and all that.
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const session = require('express-session');
@@ -60,12 +54,11 @@ app.get('/', (req, res) => {
     res.redirect('/courses');
 });
 
+//Call xyzRoutes.js to handle course routings.
 app.use('/user', usrRoutes);
-
-//Call crsRoutes to handle routings.
 app.use('/courses', crsRoutes);
 
-//Real error handling! I'm so tired. To clarify, I looked up how to do this, and I'm not certain I'm doing it 
+//Real error handling! I'm so tired. To clarify, I looked up how to do this, and I'm not certain I'm doing it right, but it seems to work, and lets me give the user actual alerts when things go wrong.
 app.use((err, req, res, next) => {
     console.error(err.stack);
     if (req.accepts('html')) {

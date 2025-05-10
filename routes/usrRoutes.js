@@ -12,6 +12,7 @@ router.post('/register', usrCtrl.newUser);
 
 router.get('/login', routeAuth.loginRedir, usrCtrl.signIn);
 router.post('/login', usrCtrl.login);
+router.post('/logout', usrCtrl.logOut);
 
 router.get('/account', usrCtrl.account);
 

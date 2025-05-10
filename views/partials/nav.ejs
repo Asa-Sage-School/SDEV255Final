@@ -12,6 +12,13 @@
     <li><a href="/courses/create">New Course</a></li>
     <% } %> <% if ((user.uid) && (user.type == 'STUDENT')) { %>
     <li><a href="/user/dashboard">Your Courses</a></li>
+    <% } %> <% if (user.uid) { %> <% /* Apparently it's not "safe" to make a
+    logout a get request so I have to suffer through this option instead. */ %>
+    <li>
+      <form action="/user/logout" method="POST" class="logout-form">
+        <button type="submit">Log Out</button>
+      </form>
+    </li>
     <% } %>
   </ul>
 </nav>

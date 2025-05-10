@@ -278,3 +278,27 @@ button:hover, .button:hover {
   min-width: 200px;
   margin: 0;
 }
+
+/* Hidden nav form for logging out: */
+.logout-form {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  transition: none !important;
+}
+.logout-form button {
+  background: none;
+  border: none;
+  color: var(--txt-dk);
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: none !important;
+  text-transform: uppercase;
+}
+.logout-form button:hover {
+  box-shadow: none;
+}

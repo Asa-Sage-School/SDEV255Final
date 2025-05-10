@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 //And that means taking lots of inspiration from the Prisma docs and reworking all of the Node.js tutorial CRUD to be asnyc.
 
 //Async - Get all courses.
-async function allCourses(req, res) {
+async function allCourses(req, res, next) {
     try {
         const uid = req.session.userUid;
         const search = req.query.q?.trim() || '';
@@ -58,7 +58,7 @@ async function allCourses(req, res) {
 }
 
 //Async - Get specific course by cid param.
-async function getCourse(req, res) {
+async function getCourse(req, res, next) {
     try {
         const uid = req.session.userUid;
         const cid = req.params.cid;
@@ -89,7 +89,7 @@ async function getCourse(req, res) {
 }
 
 //Async - Page for creating new course. TODO: Replace this and the edit course version.
-async function newCoursePage(req, res) {
+async function newCoursePage(req, res, next) {
     try {
         res.render('create', { title: 'Create Course' });
     } catch (err) {
@@ -98,7 +98,7 @@ async function newCoursePage(req, res) {
 }
 
 //Async - Page for editing existing course. TODO: No absolutely these two need to go this is so clunky and ineligant.
-async function editCoursePage(req, res) {
+async function editCoursePage(req, res, next) {
     try {
         const cid = req.params.cid;
         const course = await prisma.courses.findUnique({ where: { cid } });
@@ -113,11 +113,19 @@ async function editCoursePage(req, res) {
 }
 
 //Async - Create new course and redirect.
-async function createCourse(req, res) {
+async function createCourse(req, res, next) {
     try {
         //I have been forced to juggle these values manually like a common fool.
         const { cid, name, desc, cred } = req.body;
+        if (!/[A-Za-z]{4}-\d{3}/.test(cid)) {
+            req.session.error = "Just because the format is listed in HTML does not mean that's the only place it's checked.";
+            return res.redirect('/courses/create');
+        }
         let credInt = parseInt(cred); //Horrid little variable that will live a short and painful life. Converts the user credit entry into an integer so I can put it somewhere else.
+        if (credInt < 0 || isNaN(credInt)) {
+            req.session.error = 'Hey! Knock it off!';
+            return res.redirect('/courses/create');
+        }
         const course = await prisma.courses.create({ data: {
             cid,
             name,
@@ -138,7 +146,7 @@ async function createCourse(req, res) {
 }
 
 //Async - edit course and redirect.
-async function updateCourse(req, res) {
+async function updateCourse(req, res, next) {
     try {
         //I have been forced to juggle these values manually like a common fool. AGAIN!
         const cid = req.params.cid;
@@ -160,7 +168,7 @@ async function updateCourse(req, res) {
 }
 
 //Async - delete course and redirect.
-async function deleteCourse(req, res) {
+async function deleteCourse(req, res, next) {
     try {
         const cid = req.params.cid;
         await prisma.courses.delete({ where: { cid } });
@@ -170,7 +178,7 @@ async function deleteCourse(req, res) {
     }
 }
 
-async function enrollUser(req, res) {
+async function enrollUser(req, res, next) {
     try {
         const uid = req.session.userUid;
         const cid = req.params.cid;
@@ -192,7 +200,7 @@ async function enrollUser(req, res) {
     }
 }
 
-async function dropUser(req, res) {
+async function dropUser(req, res, next) {
     try {
         const uid = req.session.userUid;
         const cid = req.params.cid;
